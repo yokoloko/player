@@ -1,0 +1,33 @@
+user_show:
+    route: /^\/user\/([0-9]+)$/
+    callback: App\Controller\UserController::showAction
+    methods:
+        - GET
+    params:
+        - id
+
+song_show:
+    route: /^\/song\/([0-9]+)$/
+    callback: App\Controller\SongController::showAction
+    methods:
+        - GET
+    params:
+        - id
+
+favorite_new:
+    route: /^\/favorite$/
+    callback: App\Controller\FavoriteController::addAction
+    methods:
+        - POST
+
+favorite_delete:
+    route: /^\/favorite\/([0-9]+)$/
+    callback: App\Controller\FavoriteController::deleteAction
+    methods:
+        - DELETE
+
+favorite_list:
+    route: /^\/favorite*/
+    callback: App\Controller\FavoriteController::listAction
+    methods:
+        - GET

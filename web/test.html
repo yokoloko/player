@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My player</title>
+</head>
+  <div id="favorites">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>User id</th>
+          <th>User name</th>
+          <th>User email</th>
+          <th>Song id</th>
+          <th>Song name</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody id="favorites-body">
+
+      </tbody>
+    </table>
+  </div>
+
+  <form method="post" action="/favorite" id="post">
+    <label for="user_id">User id</label>
+    <input type="text" value="" name="user_id" id="user_id" />
+
+    <label for="user_id">Song id</label>
+    <input type="text" value="" name="song_id" id="song_id" />
+
+    <input type="submit" name="submit-favorite" value="ok" />
+  </form>
+
+  <!--Our template placed somewhere in our HTML-->
+  <script id="favorite-template" type="x-template">
+      <td class="favorite-id"></td>
+      <td class="favorite-user-id"></td>
+      <td class="favorite-user-name"></td>
+      <td class="favorite-user-email"></td>
+      <td class="favorite-song-id"></td>
+      <td class="favorite-song-name"></td>
+      <td class="favorite-song-duration"></td>
+      <td>
+        <a class="favorite-delete" href="">Delete</a>
+      </td>
+  </script>
+
+  <script type="text/javascript">
+    var opts = {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json'
+      }
+    };
+
+    var refresh = function () {
+
+      fetch('/favorite', opts).then(function (response) {
+        return response.json();
+      }).then(function (favorites) {
+        document.getElementById("favorites-body").innerHTML = "";
+        favorites.forEach(function (favorite) {
+          var template = document.getElementById("favorite-template").innerHTML,
+            el = document.createElement('tr');
+
+          el.innerHTML = template;
+
+          el.getElementsByClassName("favorite-id")[0].innerHTML += favorite.id;
+          el.getElementsByClassName("favorite-user-id")[0].innerHTML += favorite.user.id;
+          el.getElementsByClassName("favorite-user-name")[0].innerHTML += favorite.user.name;
+          el.getElementsByClassName("favorite-user-email")[0].innerHTML += favorite.user.email;
+          el.getElementsByClassName("favorite-song-id")[0].innerHTML += favorite.song.id;
+          el.getElementsByClassName("favorite-song-name")[0].innerHTML += favorite.song.name;
+          el.getElementsByClassName("favorite-song-duration")[0].innerHTML += favorite.song.duration;
+          el.getElementsByClassName("favorite-delete")[0].data = favorite.id;
+
+          document.getElementById("favorites-body").appendChild(el);
+        });
+
+        document.querySelectorAll('.favorite-delete').forEach(
+          function (button) {
+            button.onclick = function (event) {
+              var opts = {
+                method: 'DELETE',
+                headers: {
+                  'Accept': 'application/json'
+                }
+              };
+              fetch('/favorite/' + button.data, opts).then(function (response) {
+                return response.json();
+              }).then(function () {
+                refresh();
+              });
+
+              return false;
+            }
+          }
+        );
+      });
+    };
+
+    document.querySelector('#post').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      var form = this;
+      var opts = {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+          'Accept':'application/json'
+        }
+      };
+
+      fetch('/favorite', opts).then(function (response) {
+        if (response.status >= 400 && response.status < 600) {
+          throw new Error("Bad response from server : code " + response.status);
+        }
+
+        return response.json();
+      }).then(function () {
+        refresh();
+      });
+
+      return false;
+    });
+
+    refresh();
+</script>
+
+</body>
+</html>
