@@ -1,8 +1,6 @@
 Health care
 ===
 
-[![Build Status](https://travis-ci.org/yokoloko/health-care.svg?branch=master)](https://travis-ci.org/yokoloko/health-care)
-
 A symfony project utilizing nothing
 
 Simple Restful music player
