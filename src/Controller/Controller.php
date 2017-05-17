@@ -11,7 +11,7 @@ use Framework\Response\XmlResponse;
 use Framework\Serializer\Normalizer\ArrayNormalizer;
 use Framework\Serializer\Serializer;
 
-class Controller extends \Framework\Controller\Controller
+abstract class Controller extends \Framework\Controller\Controller
 {
     /**
      * @return Serializer
@@ -28,6 +28,12 @@ class Controller extends \Framework\Controller\Controller
         return $serializer;
     }
 
+    /**
+     * @param $body
+     * @param int $code
+     *
+     * @return Response
+     */
     public function createResponse($body, $code = 200)
     {
         $request = $this->request;

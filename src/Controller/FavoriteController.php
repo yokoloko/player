@@ -22,6 +22,10 @@ class FavoriteController extends Controller
         $userId = $post['user_id'];
         $songId = $post['song_id'];
 
+        if (empty($userId) || empty($songId)) {
+            return $this->createResponse(['message' => 'Invalid parameter'], 400);
+        }
+
         $user = $this->getRepository('\App\Repository\UserRepository')->find($userId);
         $song = $this->getRepository('\App\Repository\SongRepository')->find($songId);
 
@@ -46,7 +50,7 @@ class FavoriteController extends Controller
         $favorite = $this->getRepository('\App\Repository\FavoriteRepository')->find($id);
 
         if ($favorite === null) {
-            return $this->createResponse([], 404);
+            return $this->createResponse(null, 404);
         }
 
         $this->getRepository('\App\Repository\FavoriteRepository')->delete($favorite);

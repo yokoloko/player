@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="http://e-cdn-files.deezer.com/js/min/dz.js"></script>
+</head>
+<body>
+    <div id="dz-root"></div>
+    <div id="player" style="width:100%;" align="center"></div>
+    <div>
+        <input type="button" onclick="loginDZ(); return false;" value="Login"/>
+
+        <table id="songs">
+        </table>
+
+        <script>
+          var playlist = 3133992022;
+          DZ.init({
+            appId  : 235842,
+            channelUrl : 'http://deezer.dev/refreshx.html',
+            player : {
+              container : 'player',
+              playlist : true,
+              width : 650,
+              height : 300,
+              onload : onPlayerLoaded
+            }
+          });
+
+          function loginDZ () {
+            DZ.login(function(response) {}, {perms: 'basic_access,email,manage_library'});
+          }
+
+          function addToPlaylist(id, element) {
+            DZ.api('playlist/'+ playlist + '/tracks', 'POST', {songs: id}, function(response) {
+              if(response === true) {
+                DZ.player.addToQueue([id]);
+                element.parentElement.style.display = 'none';
+              } else {
+                alert(response.error.message);
+              }
+            });
+          }
+
+
+
+          function render(song, table) {
+            var tr = document.createElement('tr');
+            tr.innerHTML = "<td><input type='button' onclick='addToPlaylist(" + song.id + ", this); return false;' value='Add'/> " + song.title + " - " + song.artist.name + "</td>";
+            table.appendChild(tr);
+          }
+
+          function onPlayerLoaded() {
+            DZ.player.playPlaylist(playlist);
+
+            var table = document.getElementById("songs");
+
+            for (i = 0; i < 5; i++) {
+              var random = Math.floor((Math.random() * 10000000) + 10000);
+
+              DZ.api('/track/' + random, function(response) {
+                if(typeof response.id !== 'undefined') {
+                  render(response, table);
+                }
+              });
+            }
+          }
+        </script>
+    </div>
+</body>
+</html>
