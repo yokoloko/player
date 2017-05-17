@@ -15,6 +15,7 @@ You can run the Docker environment using [docker-compose](https://docs.docker.co
     $ echo '127.0.0.1 deezer.dev' >> /etc/hosts
 
 You can try it in your browser : `deezer.dev/favorite`
+
 A simple API client is available here : `deezer.dev/test.html`
 
 Playlist refresh is available here : `deezer.dev/refreshx.html`
