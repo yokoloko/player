@@ -38,4 +38,9 @@ class Request
     {
         return $this->post;
     }
+
+    public function getQueryString()
+    {
+        return $this->server['QUERY_STRING'];
+    }
 }

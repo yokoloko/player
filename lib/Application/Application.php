@@ -19,6 +19,7 @@ class Application
 
             $route  = $request->getRequestUri();
             $method = $request->getRequestMethod();
+            $query  = $request->getQueryString();
 
             $db = $environment['db'];
 
@@ -39,6 +40,8 @@ class Application
                     $controller = new $controller;
                     $controller->setPdo($pdo);
                     $controller->setRequest($request);
+
+
 
                     if (!empty($query)) {
                         parse_str($query, $values);
